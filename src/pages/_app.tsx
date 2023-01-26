@@ -35,7 +35,7 @@ const CustomApp: FC<AppProps> = ({
         />
         <title>Bunzz - ICO & Staking boilerplate</title>
         <link
-          href="https://fonts.googleapis.com/css?family=Fira Code"
+          href="https://fonts.googleapis.com/css?family=Manrope"
           rel="stylesheet"
         ></link>
       </Head>
