@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: 'Fira Code';
+}
+h1 {
+  /*text-4xl*/
+  font-size: 2.25rem/* 36px */;
+  line-height: 2.5rem/* 40px */;
+  font-weight: 600;
+}
+h2 {
+  /*text-3xl*/
+  font-size: 1.875rem/* 30px */;
+  line-height: 2.25rem;
+  font-weight: 600;
+}
+
+h3 {
+  /*text-2xl*/
+  font-size: 1.5rem/* 24px */;
+  line-height: 2rem/* 32px */;
+  font-weight: 600;
+}
+h4 {
+  /*text-xl*/
+  font-size: 1.25rem/* 20px */;
+  line-height: 1.75rem/* 28px */;
+  font-weight: 600;
+}
+
 @layer base {
   :root {
     --color-brand: 17 24 39;

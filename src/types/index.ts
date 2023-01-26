@@ -18,3 +18,15 @@ export interface Attachment {
   original: string;
   thumbnail: string;
 }
+
+export interface NFTPropertyType {
+  background: string;
+}
+export interface NFTDataType {
+  id: number;
+  img: string;
+  name: string;
+  owner: string;
+  price: number;
+  currency: string;
+}

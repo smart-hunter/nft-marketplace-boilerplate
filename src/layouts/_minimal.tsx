@@ -8,6 +8,7 @@ import { useBreakpoint } from '@/lib/hooks/use-breakpoint';
 import { useDrawer } from '@/components/drawer-views/context';
 import { useWindowScroll } from '@/lib/hooks/use-window-scroll';
 import React, { FC } from 'react';
+import Footer from './footer';
 
 type Props = {
   children: React.ReactNode;
@@ -17,9 +18,9 @@ const HeaderRightArea = () => {
   const { openDrawer, isOpen } = useDrawer();
   return (
     <div className="order-last flex shrink-0 items-center">
-      <div className="hidden gap-6 xs:flex 2xl:gap-8">
+      {/* <div className="hidden gap-6 xs:flex 2xl:gap-8">
         <WalletConnect />
-      </div>
+      </div> */}
 
       <div className="flex items-center lg:hidden">
         <Hamburger
@@ -44,7 +45,7 @@ export const Header = () => {
         'sticky top-0 z-30 flex w-full items-center justify-between px-4 transition-all duration-300 ltr:right-0 rtl:left-0 sm:px-6 lg:px-8 3xl:px-10',
         isMounted && windowScroll.y > 10
           ? 'h-16 bg-gradient-to-b from-white to-white/80 shadow-card backdrop-blur dark:from-dark dark:to-dark/80 sm:h-20'
-          : 'h-16 bg-body dark:bg-dark sm:h-24'
+          : 'h-16 bg-gray-100 dark:bg-dark sm:h-24'
       )}
     >
       <div className="mx-auto flex w-full max-w-[1120px] items-center justify-between">
@@ -76,11 +77,10 @@ export const Header = () => {
 export const MinimalLayout: FC<Props> = ({ children }) => (
   <>
     <Header />
-    <div className="bg-light-100 dark:bg-dark-100 mt-8 flex min-h-screen flex-col gap-6 px-4 sm:px-6 lg:px-8 3xl:px-10">
-      <main className="mx-auto mb-12 flex w-full max-w-[1120px] flex-grow flex-col">
-        {children}
-      </main>
+    <div className="dark:bg-dark-100 flex min-h-screen flex-col gap-6 bg-gray-100 px-4 sm:px-6 lg:px-8 3xl:px-10">
+      <main className="mb-12 flex w-full flex-grow flex-col">{children}</main>
     </div>
+    <Footer />
   </>
 );
 

@@ -20,7 +20,6 @@ export const MenuItems = () => {
     <div className="flex items-center xl:px-10 2xl:px-14 3xl:px-16">
       {menuItems.map((item, index) => (
         <Fragment key={'layout' + item.name + index}>
-          (
           <ActiveLink
             href={{
               pathname: item.href,
@@ -35,7 +34,6 @@ export const MenuItems = () => {
           >
             {item.name}
           </ActiveLink>
-          )
         </Fragment>
       ))}
     </div>
@@ -76,9 +74,9 @@ export const DrawerMenu: FC = () => {
           </div>
         </div>
       </Scrollbar>
-      <div className="absolute right-0 bottom-4 z-10 w-full px-6">
+      {/* <div className="absolute right-0 bottom-4 z-10 w-full px-6">
         <WalletConnect btnClassName="!w-full !h-11" />
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { Transition } from '@/components/ui/transition';
 import Button from '@/components/ui/button';
 import { Close } from '@/components/icons/close';
 import { useModal, MODAL_VIEW } from '@/components/modal-views/context';
+import ChangePriceView from '../marketplace/change-price';
 // dynamic imports
 const SearchView = dynamic(() => import('@/components/search/view'));
 const SelectWallet = dynamic(() => import('@/components/nft/select-wallet'));
@@ -17,6 +18,8 @@ const renderModalContent = (view: MODAL_VIEW | string) => {
       return <SearchView />;
     case 'WALLET_CONNECT_VIEW':
       return <SelectWallet />;
+    case 'CHANGE_PRICE':
+      return <ChangePriceView />;
     default:
       return null;
   }

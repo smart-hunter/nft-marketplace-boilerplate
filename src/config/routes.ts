@@ -1,7 +1,6 @@
 const routes = {
   home: '/',
-  ico: '/ico',
-  staking: '/staking',
+  marketplace: '/marketplace/',
 };
 
 export default routes;

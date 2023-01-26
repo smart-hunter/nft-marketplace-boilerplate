@@ -34,6 +34,10 @@ const CustomApp: FC<AppProps> = ({
           content="width=device-width, initial-scale=1 maximum-scale=1"
         />
         <title>Bunzz - ICO & Staking boilerplate</title>
+        <link
+          href="https://fonts.googleapis.com/css?family=Fira Code"
+          rel="stylesheet"
+        ></link>
       </Head>
       <ThemeProvider
         attribute="class"
