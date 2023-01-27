@@ -8,7 +8,8 @@ export type MODAL_VIEW =
   | 'FOLLOWING_VIEW'
   | 'FOLLOWERS_VIEW'
   | 'NFT_PREVIEW'
-  | 'CHANGE_PRICE';
+  | 'CHANGE_PRICE'
+  | 'SET_NEW_PRICE';
 
 interface ModalTypes {
   isOpen: boolean;

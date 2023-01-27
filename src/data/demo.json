@@ -56,5 +56,12 @@
       "price": 0.018,
       "currency": "ETH"
     }
+  ],
+  "totalNFTs": 784847653,
+  "sortOptions": [
+    {"id": 0, "name": "Low to High", "value": "Low to High", "group": "price"},
+    {"id": 1, "name": "High to Low", "value": "High to Low", "group": "price"},
+    {"id": 2, "name": "Low to High", "value": "Low to High", "group": "rarity"},
+    {"id": 3, "name": "High to Low", "value": "High to Low", "group": "rarity"}
   ]
 }

@@ -8,6 +8,16 @@ const withPWA = require('next-pwa')({
 });
 
 const nextConfig = withPWA({
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/marketplace',
+        permanent: true,
+        basePath: false,
+      },
+    ];
+  },
   reactStrictMode: true,
   images: {
     remotePatterns: [

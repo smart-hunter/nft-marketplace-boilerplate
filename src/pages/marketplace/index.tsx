@@ -1,6 +1,5 @@
 import MarketPlaceBuy from '@/components/marketplace/buy';
 import MarketPlaceSell from '@/components/marketplace/sell';
-import { Collapse } from '@/components/ui/collapse';
 import Select from '@/components/ui/select';
 import Tabs from '@/components/ui/tab';
 import TabPanel from '@/components/ui/tab/tabpanel';
@@ -14,7 +13,6 @@ import demoData from '../../data/demo.json';
 const MarketplacePage: NextPageWithLayout = () => {
   const [tabIdx, setTabIdx] = useState<number>(0);
   const updateTab = (idx: number) => {
-    console.log('update tab');
     setTabIdx(idx);
   };
   return (
@@ -26,8 +24,19 @@ const MarketplacePage: NextPageWithLayout = () => {
           activeIdx={tabIdx}
           onClick={(idx) => updateTab(idx)}
         ></Tabs>
-        <div className="absolute right-0">
-          <Select />
+        <div className="absolute right-10 top-0 flex items-center gap-x-5 text-sm">
+          <Select
+            selectType="GROUP_SELECT"
+            cn="min-w-[200px] px-3 py-2 bg-white rounded-md"
+            optionBoardCn="py-2 bg-white rounded-md"
+            options={demoData.sortOptions}
+            optionCn="hover:bg-gray-200"
+            placeholder="Sort by"
+            onSelect={(val) => {
+              console.log(val);
+            }}
+          />
+          <span>{Number(demoData.totalNFTs).toLocaleString()} items</span>
         </div>
       </div>
       {tabIdx === 0 && (

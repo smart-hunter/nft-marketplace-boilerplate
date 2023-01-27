@@ -1,11 +1,10 @@
 import { useModal } from '@/components/modal-views/context';
 import { NFTDataType } from '@/types';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FC } from 'react';
 import Button from '../button/button';
 
-type CardType = 'sell' | 'buy' | 'change_price';
+type CardType = 'SELL' | 'BUY' | 'CHANGE_PRICE';
 
 interface CardProps {
   card: NFTDataType;
@@ -17,18 +16,19 @@ const Card: FC<CardProps> = ({ card, cardType = 'buy' }) => {
   let btnText = '';
   const { openModal } = useModal();
   switch (cardType) {
-    case 'sell':
+    case 'SELL':
       btnText = 'Sell';
       break;
-    case 'change_price':
+    case 'CHANGE_PRICE':
       btnText = 'Change price';
       break;
     default:
       btnText = 'Buy';
       break;
   }
-  const buySubmit = (card: NFTDataType) => {
-    if (cardType === 'change_price') openModal('CHANGE_PRICE', card);
+  const handleSubmit = (card: NFTDataType) => {
+    if (cardType === 'CHANGE_PRICE') openModal('CHANGE_PRICE', card);
+    else if (cardType === 'SELL') openModal('SET_NEW_PRICE', card);
   };
   const showDetail = () => {
     router.push(`/marketplace/${card.id}`);
@@ -54,7 +54,7 @@ const Card: FC<CardProps> = ({ card, cardType = 'buy' }) => {
           size="block"
           color="primary"
           shape="rounded"
-          onClick={() => buySubmit(card)}
+          onClick={() => handleSubmit(card)}
         >
           {btnText}
         </Button>

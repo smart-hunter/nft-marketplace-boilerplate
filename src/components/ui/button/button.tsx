@@ -3,6 +3,7 @@ import cn from 'classnames';
 import { ButtonDrip } from '@/components/ui/button/button-drip';
 import { ButtonLoader } from '@/components/ui/button/button-loader';
 import { LoaderSizeTypes, LoaderVariantTypes } from '@/components/ui/loader';
+
 type ShapeNames = 'rounded' | 'pill' | 'circle';
 type VariantNames = 'ghost' | 'solid' | 'transparent';
 type ColorNames =

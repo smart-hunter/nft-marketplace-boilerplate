@@ -3,12 +3,27 @@ import { useModal } from '../modal-views/context';
 import Button from '../ui/button/button';
 import InputLabel from '../ui/input-label';
 import Input from '../ui/forms/input';
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { NFTDataType } from '@/types';
 
-const ChangePriceView = () => {
+type NFT_STATUS = 'ON_SALE' | 'READY_FOR_SALE';
+interface ChangePriceViewProps {
+  nftStatus: NFT_STATUS;
+}
+
+const ChangePriceView: FC<ChangePriceViewProps> = ({ nftStatus }) => {
   const { closeModal, data } = useModal();
   const [card, setCard] = useState<NFTDataType>(data);
+  let headerTxt = 'Change the price';
+  let btnTxt = 'Change';
+  switch (nftStatus) {
+    case 'READY_FOR_SALE':
+      headerTxt = 'Set new price';
+      btnTxt = 'Save';
+      break;
+    default:
+      break;
+  }
   const updatePrice = () => {
     data.price = card.price;
     closeModal();
@@ -17,7 +32,7 @@ const ChangePriceView = () => {
     <>
       <div className="flex min-w-[360px] flex-col rounded-xl bg-white p-8">
         <div className="mb-7 flex items-center justify-between">
-          <h3>Change the price</h3>
+          <h3>{headerTxt}</h3>
           <Button
             color="white"
             variant="ghost"
@@ -45,7 +60,7 @@ const ChangePriceView = () => {
           shape="rounded"
           onClick={() => updatePrice()}
         >
-          Change
+          {btnTxt}
         </Button>
       </div>
     </>

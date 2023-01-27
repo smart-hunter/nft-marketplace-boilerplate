@@ -19,7 +19,9 @@ const renderModalContent = (view: MODAL_VIEW | string) => {
     case 'WALLET_CONNECT_VIEW':
       return <SelectWallet />;
     case 'CHANGE_PRICE':
-      return <ChangePriceView />;
+      return <ChangePriceView nftStatus="ON_SALE" />;
+    case 'SET_NEW_PRICE':
+      return <ChangePriceView nftStatus="READY_FOR_SALE" />;
     default:
       return null;
   }
