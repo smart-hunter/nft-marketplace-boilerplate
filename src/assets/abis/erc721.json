@@ -1,7 +1,5 @@
 [
   {
-    "anonymous": false,
-    "name": null,
     "inputs": [
       {
         "internalType": "string",
