@@ -61,10 +61,12 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
   return (
     <>
       <NextSeo title="STAKING" description="Bunzz - Staking Boilerplate" />
-      <div className="flex w-full gap-x-10 px-56">
-        <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-5 xs:flex-row xs:gap-y-0 w-full gap-x-10 px-5 2xl:px-56">
+        <div className="flex w-full flex-col gap-y-4">
           <div className="flex w-full gap-x-5">
-            <img src={nftData.img} className="rounded-xl bg-white p-5" />
+            <div className="w-full">
+              <img src={nftData.img} className="rounded-xl bg-white p-5" />
+            </div>
             <div className="flex flex-col gap-y-3">
               <Button color="white" shape="circle">
                 <ShareIcon />
@@ -100,7 +102,7 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
           </Button>
         </div>
 
-        <div className="flex w-[50%] flex-col gap-y-5">
+        <div className="flex w-full flex-col gap-y-5">
           <div className="flex w-full flex-col gap-y-3 rounded-xl bg-white p-5">
             <h2>Description</h2>
             <p>
