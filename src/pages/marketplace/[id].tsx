@@ -61,7 +61,7 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
   return (
     <>
       <NextSeo title="STAKING" description="Bunzz - Staking Boilerplate" />
-      <div className="flex flex-col gap-y-5 xs:flex-row xs:gap-y-0 w-full gap-x-10 px-5 2xl:px-56">
+      <div className="flex w-full flex-col gap-y-5 gap-x-10 px-5 xs:flex-row xs:gap-y-0 2xl:px-56">
         <div className="flex w-full flex-col gap-y-4">
           <div className="flex w-full gap-x-5">
             <div className="w-full">
