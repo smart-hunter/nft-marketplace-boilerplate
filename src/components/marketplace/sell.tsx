@@ -33,7 +33,7 @@ const MarketPlaceSell: FC<MarketPlaceSellProps> = ({
           {saleItems.map((card, cardIdx) => {
             return (
               <React.Fragment key={`${card.name}_${cardIdx}`}>
-                <Card card={card} cardType="CHANGE_PRICE" />
+                <Card card={card} cardType="CHANGE_PRICE" cn="max-w-[250px]" />
               </React.Fragment>
             );
           })}
@@ -45,7 +45,7 @@ const MarketPlaceSell: FC<MarketPlaceSellProps> = ({
           {items.map((card, cardIdx) => {
             return (
               <React.Fragment key={`${card.name}_${cardIdx}`}>
-                <Card card={card} cardType="SELL" />
+                <Card card={card} cardType="SELL" cn="max-w-[250px]" />
               </React.Fragment>
             );
           })}

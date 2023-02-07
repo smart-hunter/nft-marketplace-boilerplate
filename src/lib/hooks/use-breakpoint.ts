@@ -1,6 +1,6 @@
 import createBreakpoint from 'react-use/lib/factory/createBreakpoint';
 
-const breakPoints = {
+export const breakPoints = {
   xs: 480,
   sm: 640,
   md: 768,
