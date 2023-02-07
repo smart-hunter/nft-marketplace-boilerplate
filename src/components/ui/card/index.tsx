@@ -7,11 +7,12 @@ import Button from '../button/button';
 type CardType = 'SELL' | 'BUY' | 'CHANGE_PRICE';
 
 interface CardProps {
+  cn?: string;
   card: NFTDataType;
   cardType?: CardType;
 }
 
-const Card: FC<CardProps> = ({ card, cardType = 'buy' }) => {
+const Card: FC<CardProps> = ({ cn, card, cardType = 'buy' }) => {
   const router = useRouter();
   let btnText = '';
   const { openModal } = useModal();
@@ -35,7 +36,9 @@ const Card: FC<CardProps> = ({ card, cardType = 'buy' }) => {
   };
   return (
     <>
-      <div className="cursor-pointer rounded-xl bg-white p-5 shadow-card">
+      <div
+        className={`${cn} cursor-pointer rounded-xl bg-white p-5 shadow-card`}
+      >
         <div className="relative w-full">
           <img
             className="rounded-lg bg-gray-100 p-2"

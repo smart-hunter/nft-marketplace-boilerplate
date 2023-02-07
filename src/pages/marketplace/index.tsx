@@ -15,7 +15,7 @@ import demoData from '../../data/demo.json';
 
 const MarketplacePage: NextPageWithLayout = () => {
   const [buyItems, setBuyItems] = useState<Array<NFTDataType>>([]);
-  const [numPerRow, setNumPerRow] = useState<number>(0);
+  const [numPerRow, setNumPerRow] = useState<number>(6);
   const [tabIdx, setTabIdx] = useState<number>(0);
   const [isLoading, showLoading, hideLoading] = useLoading();
 
@@ -35,7 +35,8 @@ const MarketplacePage: NextPageWithLayout = () => {
     showLoading();
     const handleWindowResize = () => {
       const width = window.innerWidth;
-      if (window.innerWidth >= breakPoints['3xl']) {
+      console.log(width);
+      if (width >= breakPoints['3xl']) {
         setNumPerRow(6);
       } else if (width < breakPoints['3xl'] && width >= breakPoints['2xl']) {
         setNumPerRow(6);
@@ -53,10 +54,11 @@ const MarketplacePage: NextPageWithLayout = () => {
         setNumPerRow(1);
       }
     };
-    handleWindowResize();
     window.addEventListener('resize', handleWindowResize);
 
+    handleWindowResize();
     setBuyItems(demoData.cardData.slice(0, numPerRow));
+    console.log(numPerRow);
     hideLoading();
 
     return () => window.removeEventListener('resize', handleWindowResize);
