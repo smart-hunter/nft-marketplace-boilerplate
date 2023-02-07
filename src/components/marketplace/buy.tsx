@@ -9,11 +9,15 @@ interface MarketPlaceBuyProps {
   onLoadMore: (num: number) => void;
 }
 
-const MarketPlaceBuy: FC<MarketPlaceBuyProps> = ({ items, numPerRow, onLoadMore }) => {
+const MarketPlaceBuy: FC<MarketPlaceBuyProps> = ({
+  items,
+  numPerRow,
+  onLoadMore,
+}) => {
   const loadMore = () => {
     onLoadMore(numPerRow * 3);
   };
-  
+
   return (
     <>
       <div className={`my-10 grid custom-grid-cols-${numPerRow} gap-4 py-10`}>
