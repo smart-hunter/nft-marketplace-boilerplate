@@ -123,5 +123,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
+  plugins: [import('@tailwindcss/typography'), import('@tailwindcss/forms')],
 };

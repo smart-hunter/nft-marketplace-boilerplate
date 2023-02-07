@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { ChevronDownIcon } from '@/components/icons/chevron-down';
 import ChevronUpIcon from '@/components/icons/chevron-up';
 import ClickOutside from '../click-outside';
+import { groupBy } from 'lodash';
 
 /*
 {"id": 0, "name": "Low to High", "value": "Low to High", "group": "price"},
@@ -22,6 +23,7 @@ interface SelectProps {
   cn?: string;
   optionBoardCn?: string;
   optionCn?: string;
+  groupCn?: string;
   defaultOption?: any;
   enableUnderline?: boolean;
   placeholder?: string;
@@ -34,6 +36,7 @@ const Select: FC<SelectProps> = ({
   cn,
   optionBoardCn,
   optionCn,
+  groupCn,
   defaultOption,
   placeholder,
   onSelect,
@@ -43,28 +46,55 @@ const Select: FC<SelectProps> = ({
 
   const renderOptions = () => {
     if (selectType === 'GROUP_SELECT') {
-      const groups: Array<string> = [];
-      options.map((opt) => {
-        if (opt.group && groups.indexOf(opt.group) > 0) groups.push(opt.group);
-      });
+      const optList = groupBy(options, 'group');
+      return (
+        <div className="max-h-80 overflow-y-auto text-gray-600">
+          {Object.keys(optList).map((kv, kvIdx) => {
+            return (
+              <div key={`${kv}_${kvIdx}`}>
+                <div
+                  className={`flex cursor-pointer items-center border-gray-600 p-2 ${groupCn}`}
+                >
+                  {kv.charAt(0).toUpperCase() + kv.slice(1)}
+                </div>
+                {optList[kv].map((opt, optIdx) => {
+                  return (
+                    <div
+                      key={`${optIdx}_${opt.value}`}
+                      className={`flex cursor-pointer items-center border-gray-600 p-2 ${optionCn}`}
+                      onClick={() => {
+                        selectOption(optIdx);
+                      }}
+                    >
+                      {opt.name}
+                    </div>
+                  );
+                })}
+              </div>
+            )
+          })}
+        </div>
+      );
+    } else {
+      return (
+        <div className="max-h-80 overflow-y-auto text-gray-600">
+          {options.map((opt, optIdx) => {
+            return (
+              <div
+                key={`${optIdx}_${opt.value}`}
+                className={`flex cursor-pointer items-center border-gray-600 p-2 ${optionCn}`}
+                onClick={() => {
+                  selectOption(optIdx);
+                }}
+              >
+                {opt.name}
+              </div>
+            );
+          })}
+        </div>
+      );
     }
-    return (
-      <div className="max-h-80 overflow-y-auto text-gray-600">
-        {options.map((opt, optIdx) => {
-          return (
-            <div
-              key={`${optIdx}_${opt.value}`}
-              className={`flex cursor-pointer items-center border-gray-600 p-2 ${optionCn}`}
-              onClick={() => {
-                selectOption(optIdx);
-              }}
-            >
-              {opt.name}
-            </div>
-          );
-        })}
-      </div>
-    );
+    
   };
 
   const selectOption = (idx: number) => {

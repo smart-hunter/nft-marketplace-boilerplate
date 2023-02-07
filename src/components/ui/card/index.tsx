@@ -35,7 +35,7 @@ const Card: FC<CardProps> = ({ card, cardType = 'buy' }) => {
   };
   return (
     <>
-      <div className="max-w-[250px] cursor-pointer rounded-xl bg-white p-5 shadow-card">
+      <div className="cursor-pointer rounded-xl bg-white p-5 shadow-card">
         <div className="relative w-full">
           <img
             className="rounded-lg bg-gray-100 p-2"
