@@ -4,8 +4,16 @@ import Card from '@/components/ui/card';
 import { NextPageWithLayout, NFTDataType } from '@/types';
 import demoData from '../../data/demo.json';
 import MarketPlaceLayout from '@/layouts/maketplace/layout';
+import { useEvmContractNFTs } from '@moralisweb3/next';
+import { ERC721TOKEN_ADDRESS } from '@/lib/constants/web3_contants';
 
 const MarketPlaceSell: NextPageWithLayout = () => {
+  const options = {
+    chain: '0x5',
+    address: ERC721TOKEN_ADDRESS,
+  };
+  const { data } = useEvmContractNFTs(options);
+  console.log(data);
   const [items] = useState<Array<NFTDataType>>(demoData.cardData.slice(0, 3));
   const [saleItems] = useState<Array<NFTDataType>>(
     demoData.cardData.slice(0, 2)
