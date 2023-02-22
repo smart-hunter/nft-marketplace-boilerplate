@@ -35,5 +35,9 @@ const nextConfig = withPWA({
       ignoreDuringBuilds: true,
     },
   }),
+  env: {
+    MORALIS_API_KEY:
+      'xPGwTZFZ5HA3XNBrShalY9kpFsaSS9PyBYBoyjOaVCyfJeTzgsQ3FrKQEa8hEG8z',
+  },
 });
 module.exports = nextConfig;

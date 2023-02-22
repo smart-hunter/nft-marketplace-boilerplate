@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { NextSeo } from 'next-seo';
 import { breakPoints } from '@/lib/hooks/use-breakpoint';
 import Button from '@/components/ui/button/button';
@@ -8,20 +8,20 @@ import demoData from '../../data/demo.json';
 import useLoading from '@/lib/hooks/use-loading';
 import FullPageLoading from '@/components/ui/loading/full-page-loading';
 import MarketPlaceLayout from '@/layouts/maketplace/layout';
+import { useMarketplceContract } from '@/lib/hooks/use-marketplace-contract';
+import { WalletContext } from '@/lib/hooks/use-connect';
 
 const MarketPlaceBuy: NextPageWithLayout = () => {
   const [isLoading, showLoading, hideLoading] = useLoading();
-  const [items, setItems] = useState<Array<NFTDataType>>(
-    demoData.cardData.slice(0, 6)
-  );
+  const { getProvider, address } = useContext(WalletContext);
+  const provider = getProvider();
+  const { myNfts, saleItems, getTokenListingFromMyNFTs, getListings } =
+    useMarketplceContract(provider, address);
   const [numPerRow, setNumPerRow] = useState<number>(0);
   const loadMore = () => {
     showLoading();
-    setTimeout(() => {
-      const newItems = Array(numPerRow * 3).fill(demoData.cardData[0]);
-      setItems([...items, ...newItems]);
-      hideLoading();
-    }, 3000);
+    getListings(0, 5).then();
+    hideLoading();
   };
 
   useEffect(() => {
@@ -58,10 +58,10 @@ const MarketPlaceBuy: NextPageWithLayout = () => {
         description="Bunzz Marketplace Buy"
       />
       <div className={`my-10 grid custom-grid-cols-${numPerRow} gap-4 py-10`}>
-        {items.map((card, cardIdx) => {
+        {saleItems?.map((item) => {
           return (
-            <React.Fragment key={`${card.name}_${cardIdx}`}>
-              <Card card={card} />
+            <React.Fragment key={`${item.name}_${item.tokenId}`}>
+              <Card nftItem={item} />
             </React.Fragment>
           );
         })}

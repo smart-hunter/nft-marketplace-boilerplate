@@ -3,8 +3,10 @@ import { useModal } from '../modal-views/context';
 import Button from '../ui/button/button';
 import InputLabel from '../ui/input-label';
 import Input from '../ui/forms/input';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
 import { NFTDataType } from '@/types';
+import { WalletContext } from '@/lib/hooks/use-connect';
+import { useMarketplceContract } from '@/lib/hooks/use-marketplace-contract';
 
 type NFT_STATUS = 'ON_SALE' | 'READY_FOR_SALE';
 interface ChangePriceViewProps {
@@ -13,7 +15,9 @@ interface ChangePriceViewProps {
 
 const ChangePriceView: FC<ChangePriceViewProps> = ({ nftStatus }) => {
   const { closeModal, data } = useModal();
-  const [card, setCard] = useState<NFTDataType>(data);
+  const tokenId = data.tokenId;
+  const [price, setPrice] = useState<number>(data?.price ? data.price : 0);
+  console.log(tokenId, price);
   let headerTxt = 'Change the price';
   let btnTxt = 'Change';
   switch (nftStatus) {
@@ -24,10 +28,21 @@ const ChangePriceView: FC<ChangePriceViewProps> = ({ nftStatus }) => {
     default:
       break;
   }
-  const updatePrice = () => {
-    data.price = card.price;
+  const updatePrice = async () => {
+    if (nftStatus == 'READY_FOR_SALE') {
+      await list(tokenId, price);
+    } else {
+      await changePrice(tokenId, price);
+    }
+    data.price = price;
     closeModal();
   };
+
+  const { getProvider, address } = useContext(WalletContext);
+  const provider = getProvider();
+  const { marketplaceContract, MARKETPLACE_ADDRESS, list, changePrice } =
+    useMarketplceContract(provider, address);
+
   return (
     <>
       <div className="flex min-w-[360px] flex-col rounded-xl bg-white p-8">
@@ -45,8 +60,8 @@ const ChangePriceView: FC<ChangePriceViewProps> = ({ nftStatus }) => {
 
         <InputLabel title="Price" />
         <Input
-          defaultValue={card.price}
-          onChange={(e) => setCard({ ...card, price: Number(e.target.value) })}
+          defaultValue={price}
+          onChange={(e) => setPrice(Number(e.target.value))}
           min={0}
           pattern="[+-]?([0-9]*[.])?[0-9]+"
           type="text"

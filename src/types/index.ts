@@ -23,10 +23,18 @@ export interface NFTPropertyType {
   background: string;
 }
 export interface NFTDataType {
-  id: number;
-  img: string;
-  name: string;
-  owner: string;
+  tokenId: number;
+  // img: string;
+  // name: string;
+  // owner: string;
   price: number;
-  currency: string;
+  // currency: string;
+}
+
+
+export interface ListingDataType {
+  tokenId: number;
+  price: number;
+  isSold: boolean;
+  exist: boolean;
 }

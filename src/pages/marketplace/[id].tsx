@@ -9,18 +9,18 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import { NextSeo } from 'next-seo';
 import { ParsedUrlQuery } from 'querystring';
 import { useState } from 'react';
-import demoData from '../../data/demo.json';
+import { useMoralisApi } from '@/lib/hooks/use-moralis-api';
 
 interface IParams extends ParsedUrlQuery {
   id: string;
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const arr: Array<NFTDataType> = demoData.cardData;
+export const getStaticPaths: GetStaticPaths = () => {
+  const { nfts } = useMoralisApi('');
   return {
-    paths: arr.map((item) => {
+    paths: nfts?.map((item: { tokenId: any }) => {
       return {
-        params: { id: String(item.id).toString() },
+        params: { id: item.tokenId },
       };
     }),
     fallback: false,
@@ -28,36 +28,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  const { nfts } = useMoralisApi('');
   const { id } = context.params as IParams;
-  const cardData = demoData.cardData.filter(
-    (item) => item.id === Number(id)
+  const data = nfts?.filter(
+    (item: { tokenId: string }) => item.tokenId === id
   )[0];
   return {
     props: {
-      data: cardData,
+      data,
     },
   };
 };
 
 const NFTDetailPage: NextPageWithLayout = ({ data }) => {
-  const [nftData] = useState<NFTDataType>(data as NFTDataType);
-  const properties = [
-    { name: 'Background', value: 'None', trait: '66% have this trait' },
-    {
-      name: 'Collection',
-      value: 'Pudgy Crew Socks',
-      trait: '66% have this trait',
-    },
-    { name: 'Item', value: 'Crew Socks', trait: '66% have this trait' },
-    {
-      name: 'Parent name',
-      value: 'Pudgy Penguin',
-      trait: '66% have this trait',
-    },
-    { name: 'Property', value: 'Common', trait: '66% have this trait' },
-    { name: 'Property', value: 'Crafted', trait: '66% have this trait' },
-    { name: 'Type', value: 'Footwear', trait: '66% have this trait' },
-  ];
+  const properties = data?.metadata?.attributes
+    ? data?.metadata?.attributes
+    : [];
   return (
     <>
       <NextSeo title="STAKING" description="Bunzz - Staking Boilerplate" />
@@ -65,7 +51,7 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
         <div className="flex w-full flex-col gap-y-4">
           <div className="flex w-full gap-x-5">
             <div className="w-full">
-              <img src={nftData.img} className="rounded-xl bg-white p-5" />
+              <img src={data.metadata.image} className="rounded-xl bg-white p-5" />
             </div>
             <div className="flex flex-col gap-y-3">
               <Button color="white" shape="circle">
@@ -83,13 +69,13 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
             </div>
           </div>
           <div className="flex items-center gap-x-2">
-            <h3 className="">{nftData.name}</h3>
+            <h3 className="">{data.name}</h3>
             <sub className="text-gray-400">Owned by</sub>
-            <sub>{nftData.owner}</sub>
+            <sub>{data.ownerOf}</sub>
           </div>
           <p>Current Price</p>
           <h1>
-            {nftData.price} {nftData.currency}{' '}
+            {data.price} {nftData.currency}{' '}
             <span className="text-base text-gray-400">$100.05</span>
           </h1>
           <Button
@@ -126,9 +112,8 @@ const NFTDetailPage: NextPageWithLayout = ({ data }) => {
                   className="flex w-full items-center"
                   key={`${pIdx}_${property.name}`}
                 >
-                  <span className="w-1/3">{property.name}</span>
+                  <span className="w-1/3">{property.trait_type}</span>
                   <span className="w-1/3">{property.value}</span>
-                  <span className="w-1/3">{property.trait}</span>
                 </div>
               );
             })}

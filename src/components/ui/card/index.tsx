@@ -1,18 +1,18 @@
 import { useModal } from '@/components/modal-views/context';
-import { NFTDataType } from '@/types';
 import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import Button from '../button/button';
+import { EvmNft } from '@moralisweb3/common-evm-utils';
 
 type CardType = 'SELL' | 'BUY' | 'CHANGE_PRICE';
 
 interface CardProps {
   cn?: string;
-  card: NFTDataType;
+  nftItem: EvmNft;
   cardType?: CardType;
 }
 
-const Card: FC<CardProps> = ({ cn, card, cardType = 'buy' }) => {
+const Card: FC<CardProps> = ({ cn, nftItem, cardType = 'BUY' }) => {
   const router = useRouter();
   let btnText = '';
   const { openModal } = useModal();
@@ -27,13 +27,15 @@ const Card: FC<CardProps> = ({ cn, card, cardType = 'buy' }) => {
       btnText = 'Buy';
       break;
   }
-  const handleSubmit = (card: NFTDataType) => {
-    if (cardType === 'CHANGE_PRICE') openModal('CHANGE_PRICE', card);
-    else if (cardType === 'SELL') openModal('SET_NEW_PRICE', card);
+  const handleSubmit = (item: EvmNft) => {
+    if (cardType === 'CHANGE_PRICE')
+      openModal('CHANGE_PRICE', { tokenId: item.tokenId });
+    else if (cardType === 'SELL') openModal('SET_NEW_PRICE', item);
   };
   const showDetail = () => {
-    router.push(`/marketplace/${card.id}`);
+    router.push(`/marketplace/${nftItem.tokenId}`);
   };
+
   return (
     <>
       <div
@@ -42,22 +44,22 @@ const Card: FC<CardProps> = ({ cn, card, cardType = 'buy' }) => {
         <div className="relative w-full">
           <img
             className="rounded-lg bg-gray-100 p-2"
-            src={card.img}
-            alt={card.name}
+            src={nftItem.metadata?.image}
+            alt={nftItem.name}
             onClick={() => showDetail()}
           />
         </div>
-        <p className="mt-2 font-semibold text-gray-600">{card.name}</p>
-        <p className="text-gray-400">{card.owner}</p>
+        <p className="mt-2 font-semibold text-gray-600">{nftItem.name}</p>
+        <p className="text-gray-400">{nftItem.ownerOf?.format()}</p>
         <p className="my-2 font-semibold text-gray-600">
-          {card.price} {card.currency}
+          {nftItem.symbol} {nftItem.symbol}
         </p>
         <Button
           className="mt-5"
           size="block"
           color="primary"
           shape="rounded"
-          onClick={() => handleSubmit(card)}
+          onClick={() => handleSubmit(nftItem)}
         >
           {btnText}
         </Button>
