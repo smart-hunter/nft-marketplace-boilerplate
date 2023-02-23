@@ -29,14 +29,16 @@ const Card: FC<CardProps> = ({
   const router = useRouter();
   const { getProvider, address } = useContext(WalletContext);
   const provider = getProvider();
-  const { buy } = useMarketplceContract(provider, address);
+  const { buy, removeList } = useMarketplceContract(provider, address);
   const { getTokenData } = useMoralisApi(address);
   const nftItem = getTokenData(tokenId.toString());
   if (!nftItem) return null;
 
-  const [generalPrice, setGeneralPrice] = useState<string>(
-    ethers.utils.formatUnits(price, 18)
-  );
+  const [generalPrice, setGeneralPrice] = useState<string>();
+
+  useEffect(() => {
+    setGeneralPrice(ethers.utils.formatUnits(price, 18));
+  });
 
   let btnText: string;
   const { openModal, data } = useModal();
@@ -63,6 +65,11 @@ const Card: FC<CardProps> = ({
       });
     }
   };
+  const removeItemFromListing = (item: EvmNft) => {
+    showLoading();
+    removeList(item.tokenId).then();
+    hideLoading();
+  };
   const showDetail = () => {
     router.push(`/marketplace/${nftItem.tokenId}`);
   };
@@ -78,7 +85,7 @@ const Card: FC<CardProps> = ({
       >
         <div className="relative w-full">
           <img
-            className="rounded-lg bg-gray-100 p-2"
+            className="rounded-lg bg-gray-100"
             src={nftItem.metadata?.image}
             alt={nftItem.name}
             onClick={() => showDetail()}
@@ -101,7 +108,10 @@ const Card: FC<CardProps> = ({
           {btnText}
         </Button>
         {cardType == 'CHANGE_PRICE' && (
-          <a className="mx-auto mt-3 flex cursor-pointer justify-center underline">
+          <a
+            className="mx-auto mt-3 flex cursor-pointer justify-center underline"
+            onClick={() => removeItemFromListing(nftItem)}
+          >
             Remove listing
           </a>
         )}

@@ -62,7 +62,9 @@ const MarketPlaceBuy: NextPageWithLayout = () => {
         title="Bunzz - Marketplace"
         description="Bunzz Marketplace Buy"
       />
-      <div className={`my-10 grid custom-grid-cols-${numPerRow} gap-4 py-10`}>
+      <div
+        className={`my-10 grid custom-grid-cols-${numPerRow} gap-4 py-10 px-10`}
+      >
         {listings?.map((item) => {
           return (
             <React.Fragment key={`${item.tokenId}`}>

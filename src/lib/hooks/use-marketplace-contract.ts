@@ -148,6 +148,19 @@ export const useMarketplceContract = (
     }
   };
 
+  const removeList = async (tokenId: number | string) => {
+    try {
+      const tx = await marketplaceContract.cancelListing(tokenId);
+      console.log(tx);
+      const result = await tx.wait();
+      console.log(result);
+      toast('Remove list successful!');
+    } catch (error) {
+      console.log(error);
+      toast.error('Remove list failed.');
+    }
+  };
+
   const buy = async (tokenId: number | string, price: BN) => {
     if (!(await isApproved(MARKETPLACE_ADDRESS, tokenId))) return;
     try {
@@ -182,5 +195,6 @@ export const useMarketplceContract = (
     getListings,
     getPrice,
     resetListings,
+    removeList,
   };
 };
