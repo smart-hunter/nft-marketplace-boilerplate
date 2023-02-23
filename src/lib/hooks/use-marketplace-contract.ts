@@ -1,18 +1,14 @@
-import { useEffect, useState } from "react";
-import { Contract, BigNumber as BN } from 'ethers';
+import { useState } from 'react';
+import { BigNumber as BN, Contract } from 'ethers';
 import { Web3Provider } from '@ethersproject/providers';
-import ICO_ABI from '../../assets/abis/ico.json';
 import { toast } from 'react-toastify';
 import { MARKETPLACE_ABI } from '@/lib/constants/abis/marketplace';
-import {
-  MARKETPLACE_ADDRESS,
-  OneToken,
-} from '@/lib/constants/web3_contants';
+import { MARKETPLACE_ADDRESS, OneToken } from '@/lib/constants/web3_contants';
 import { useERC721Contract } from '@/lib/hooks/use-erc721-contract';
 import { EvmNft } from 'moralis/common-evm-utils';
-import { ListingDataType, NFTDataType } from '@/types';
-import { useMap } from 'react-use';
+import { ListingDataType } from '@/types';
 import { useMoralisApi } from '@/lib/hooks/use-moralis-api';
+import { LISTING_COUNT } from '@/lib/constants';
 
 export const useMarketplceContract = (
   provider: Web3Provider | undefined,
@@ -25,10 +21,7 @@ export const useMarketplceContract = (
       provider?.getSigner()
     )
   );
-  const { isApproved, approveToken } = useERC721Contract(
-    provider,
-    address
-  );
+  const { isApproved, approveToken } = useERC721Contract(provider, address);
   const { myNfts, nfts } = useMoralisApi(address);
   const getTokenListing = async (tokenId: number | string) => {
     try {
@@ -39,45 +32,83 @@ export const useMarketplceContract = (
     }
   };
 
-  const getListing = async (tokenId: number | string) => {
+  const getListing = async (listingId: number | string | BN) => {
     try {
-      const listing = await marketplaceContract.listings(tokenId);
-      console.log('listing', listing);
-      return listing;
+      return await marketplaceContract.listings(listingId);
     } catch (error) {
       return null;
     }
   };
 
-  const [saleItems, setSaleItems] = useState<Array<EvmNft>>();
+  const [saleItems, setSaleItems] = useState<Array<ListingDataType>>([]);
+
+  const getListingFromTokenId = async (tokenId: number | string) => {
+    const listingId = await marketplaceContract.tokensListing(tokenId);
+    if (listingId == BN.from(0)) return null;
+    return await getListing(listingId);
+  };
 
   const getTokenListingFromMyNFTs = async () => {
-    const _saleItems: Array<EvmNft> = [];
+    if (saleItems.length > 0) return;
+    const _saleItems: Array<ListingDataType> = [];
     for (let i = 0; i < myNfts?.length; i++) {
-      if (await getTokenListing(myNfts[i].tokenId)) _saleItems.push(myNfts[i]);
+      const listing = await getListingFromTokenId(myNfts[i].tokenId);
+      if (listing.exist) {
+        _saleItems.push(listing);
+      }
     }
-    if (!saleItems?.length) setSaleItems(_saleItems);
+    setSaleItems(_saleItems);
+    getUnListedNFTs(_saleItems);
   };
 
   if (myNfts) {
     getTokenListingFromMyNFTs().then();
   }
 
-  const [listings, setListings] = useState<Array<ListingDataType>>([]);
+  const [unListedNFTs, setUnlistedNFTs] = useState<Array<EvmNft>>([]);
 
-  const priceList = useMap();
+  const getUnListedNFTs = (_saleItems: Array<ListingDataType>) => {
+    const _unListedNFTs = myNfts.filter((item: EvmNft) => {
+      const _items = _saleItems.filter(
+        (_item) => item.tokenId.toString() == _item.tokenId.toString()
+      );
+      return _items.length == 0;
+    });
+    setUnlistedNFTs(_unListedNFTs);
+  };
+
+  const [listings, setListings] = useState<Array<ListingDataType>>([]);
 
   const getListings = async (from: number, num: number) => {
     const _listings: Array<ListingDataType> = [];
     for (let i = from; i < from + num; i++) {
       const listing = await getListing(i);
-      if (listing.exist) {
+      if (listing?.exist && !listing?.isSold) {
         _listings.push(listing);
-        priceList[listing?.tokenId?.toString()] = listing.price;
       }
     }
-    console.log(priceList)
     setListings([...listings, ..._listings]);
+  };
+
+  const resetListings = async (from: number, num: number) => {
+    const _listings: Array<ListingDataType> = [];
+    for (let i = from; i < from + num; i++) {
+      const listing = await getListing(i);
+      if (listing?.exist && !listing?.isSold) {
+        _listings.push(listing);
+      }
+    }
+    setListings([..._listings]);
+  };
+
+  const getPrice = async (tokenId: number | string) => {
+    if (!tokenId) return '0';
+    const listingId = await marketplaceContract.tokensListing(tokenId);
+    if (listingId == BN.from(0)) return '0';
+    const listing = await getListing(listingId);
+    if (listing?.exist) {
+      return listing.price.toString();
+    } else return '0';
   };
 
   const changePrice = async (tokenId: number, amount: number) => {
@@ -85,7 +116,7 @@ export const useMarketplceContract = (
     try {
       const tx = await marketplaceContract.changePrice(
         tokenId,
-        OneToken.mul(amount * 1000000).div(1000000)
+        OneToken.mul(amount * 100000000).div(100000000)
       );
       console.log(tx);
       const result = await tx.wait();
@@ -117,20 +148,20 @@ export const useMarketplceContract = (
     }
   };
 
-  const buy = async (tokenId: number | string) => {
+  const buy = async (tokenId: number | string, price: BN) => {
     if (!(await isApproved(MARKETPLACE_ADDRESS, tokenId))) return;
     try {
-      const tx = await marketplaceContract.buy(
-        tokenId,
-        OneToken.mul(amount * 1000000).div(1000000)
-      );
+      const tx = await marketplaceContract.buy(tokenId, {
+        value: price,
+      });
       console.log(tx);
       const result = await tx.wait();
       console.log(result);
-      toast('List successful!');
+      toast('Buy successful!');
+      await resetListings(0, LISTING_COUNT);
     } catch (error) {
       console.log(error);
-      toast.error('List failed.');
+      toast.error('Buy failed.');
     }
   };
 
@@ -139,12 +170,17 @@ export const useMarketplceContract = (
     marketplaceContract,
     myNfts,
     nfts,
-    priceList,
+    listings,
+    saleItems,
+    unListedNFTs,
     list,
     changePrice,
+    buy,
     getTokenListing,
     getTokenListingFromMyNFTs,
-    saleItems,
+    getListingFromTokenId,
     getListings,
+    getPrice,
+    resetListings,
   };
 };

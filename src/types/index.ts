@@ -1,5 +1,6 @@
 import type { NextPage } from 'next';
 import type { ReactElement, ReactNode } from 'react';
+import { BigNumber } from 'ethers';
 
 export type NextPageWithLayout<P = Record<string, unknown>> = NextPage<P> & {
   authorization?: boolean;
@@ -31,10 +32,15 @@ export interface NFTDataType {
   // currency: string;
 }
 
-
 export interface ListingDataType {
-  tokenId: number;
-  price: number;
+  tokenId: string;
+  name: string;
+  price: BigNumber;
   isSold: boolean;
   exist: boolean;
+}
+
+export interface AttributeType {
+  trait_type: string;
+  value: string;
 }

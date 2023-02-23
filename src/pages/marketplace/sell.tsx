@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NextSeo } from 'next-seo';
 import Card from '@/components/ui/card';
 import { NextPageWithLayout } from '@/types';
 import MarketPlaceLayout from '@/layouts/maketplace/layout';
 import { useContext } from 'react';
 import { WalletContext } from '@/lib/hooks/use-connect';
-import { useERC721Contract } from '@/lib/hooks/use-erc721-contract';
-import { EvmNft } from '@moralisweb3/common-evm-utils';
 import { useMarketplceContract } from '@/lib/hooks/use-marketplace-contract';
+import { EvmNft } from '@moralisweb3/common-evm-utils';
+import { BigNumber } from 'ethers';
 
 const MarketPlaceSell: NextPageWithLayout = () => {
   const [floorPrice] = useState<number>(20);
@@ -15,8 +15,7 @@ const MarketPlaceSell: NextPageWithLayout = () => {
 
   const { getProvider, address } = useContext(WalletContext);
   const provider = getProvider();
-  const { myNfts, saleItems, getTokenListingFromMyNFTs } =
-    useMarketplceContract(provider, address);
+  const { unListedNFTs, saleItems } = useMarketplceContract(provider, address);
   return (
     <>
       <NextSeo
@@ -40,7 +39,8 @@ const MarketPlaceSell: NextPageWithLayout = () => {
             return (
               <React.Fragment key={`${item.name}_${item.tokenId}`}>
                 <Card
-                  nftItem={item}
+                  tokenId={item.tokenId.toString()}
+                  price={item.price}
                   cardType="CHANGE_PRICE"
                   cn="max-w-[250px]"
                 />
@@ -52,10 +52,15 @@ const MarketPlaceSell: NextPageWithLayout = () => {
       <section className="pt-7 pb-5">
         <h2>Your NFT&apos;s</h2>
         <div className="my-5 flex flex-wrap gap-4">
-          {myNfts?.map((item) => {
+          {unListedNFTs?.map((item: EvmNft) => {
             return (
               <React.Fragment key={`${item.name}_${item.tokenId}`}>
-                <Card nftItem={item} cardType="SELL" cn="max-w-[250px]" />
+                <Card
+                  tokenId={item.tokenId}
+                  cardType="SELL"
+                  cn="max-w-[250px]"
+                  price={BigNumber.from(0)}
+                />
               </React.Fragment>
             );
           })}
